@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -147,7 +148,21 @@ namespace FileAllocationTable
             Dir[dirIndex].Size = 0;
             Dir[dirIndex].FirstBlock = -1;
 
-            MessageBox.Show("Файлът е изтрит");
+            MessageBox.Show("Файлът е изтрит.");
+        }
+
+        //метод за показване на състоянието на основните структури
+        public void Show()
+        {
+            foreach(var file in Dir)
+            {
+                if(file.Name != "")
+                {
+                    MessageBox.Show("Име на файла: " + file.Name);
+                    MessageBox.Show("Размер: " + file.Size);
+                    MessageBox.Show("Блокове: ");
+                }
+            }
         }
     }
 }
