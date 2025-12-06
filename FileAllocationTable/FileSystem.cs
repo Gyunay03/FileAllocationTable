@@ -11,6 +11,7 @@ namespace FileAllocationTable
         const int MaxBlocks = 16;
         const int FreeMark = 0;
         const int NillMark = 255;
+        const int BlockSize = 1024;
         
         int FreeBlocks = MaxBlocks;
 
@@ -70,7 +71,7 @@ namespace FileAllocationTable
         //метод за създаване на файл
         public void SaveFile(string name, int size)
         {
-            int requiredBlocks = size;
+            int requiredBlocks = (size + BlockSize - 1) / BlockSize;
             var blocks = FindFreeBlocks(requiredBlocks);
 
             if(blocks.Count < requiredBlocks)
@@ -111,6 +112,42 @@ namespace FileAllocationTable
             }
 
             FAT[blocks.Last()].NextBlock = NillMark;
+        }
+
+        //метод за изтриване на файл
+        public void DeleteFile(string name)
+        {
+            int dirIndex = -1;
+            for(int i=0; i<Dir.Length; i++)
+            {
+                if (Dir[i].Name == name)
+                {
+                    dirIndex = i;
+                    break;
+                }
+            }
+
+            if (dirIndex == -1)
+            {
+                MessageBox.Show("Файлът не съществува.");
+                return;
+            }
+
+            int current = Dir[dirIndex].FirstBlock;
+
+            while(current != NillMark)
+            {
+                int next = FAT[current].NextBlock;
+                FAT[current].NextBlock = FreeMark;
+                current = next;
+                FreeBlocks++;
+            }
+
+            Dir[dirIndex].Name = "";
+            Dir[dirIndex].Size = 0;
+            Dir[dirIndex].FirstBlock = -1;
+
+            MessageBox.Show("Файлът е изтрит");
         }
     }
 }
