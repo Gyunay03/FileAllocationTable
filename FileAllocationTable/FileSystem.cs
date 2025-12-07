@@ -154,14 +154,62 @@ namespace FileAllocationTable
         //метод за показване на състоянието на основните структури
         public void Show()
         {
-            foreach(var file in Dir)
+            for(int i=0; i < Dir.Length; i++)
             {
-                if(file.Name != "")
+                var file = Dir[i];
+                
+                if (file == null || file.Name == "")
                 {
-                    MessageBox.Show("Име на файла: " + file.Name);
-                    MessageBox.Show("Размер: " + file.Size);
-                    MessageBox.Show("Блокове: ");
+                    continue;
                 }
+
+                var message = new StringBuilder();
+                message.AppendLine("Име на файла: " + file.Name);
+                message.AppendLine("Размер: " + file.Size);
+                message.AppendLine("Блокове: ");
+
+                int currentBlock = file.FirstBlock;
+
+                if (currentBlock == -1)
+                {
+                    message.Append("(няма първи блок)");
+                }
+
+                else
+                {
+                    var blocks = new List<int>();
+                    var safetyCounter = 0;
+
+                    while (currentBlock != NillMark)
+                    {
+                        if (currentBlock < 0 || currentBlock >= MaxBlocks)
+                        {
+                            blocks.Add(-1);
+                            MessageBox.Show("Невалиден блок.");
+                            break;
+                        }
+
+                        blocks.Add(currentBlock);
+                        int next = FAT[currentBlock].NextBlock;
+
+                        if (next == currentBlock)
+                        {
+                            break;
+                        }
+
+                        currentBlock = next;
+                        safetyCounter++;
+                        
+                        if(safetyCounter > MaxBlocks + 5)
+                        {
+                            break;
+                        }
+                    }
+
+                    message.Append(string.Join(",", blocks));
+                }
+
+                MessageBox.Show(message.ToString());
             }
         }
     }
