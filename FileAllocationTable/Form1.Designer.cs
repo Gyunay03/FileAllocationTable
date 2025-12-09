@@ -36,6 +36,15 @@
             tbFileName = new TextBox();
             tbFileSize = new TextBox();
             rtfOutput = new RichTextBox();
+            dataGridView1 = new DataGridView();
+            FileName = new DataGridViewTextBoxColumn();
+            FileSize = new DataGridViewTextBoxColumn();
+            FirstBlock = new DataGridViewTextBoxColumn();
+            dataGridView2 = new DataGridView();
+            Block = new DataGridViewTextBoxColumn();
+            NextBlock = new DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
             // btnCreate
@@ -60,7 +69,7 @@
             // 
             // btnShow
             // 
-            btnShow.Location = new Point(505, 137);
+            btnShow.Location = new Point(505, 131);
             btnShow.Name = "btnShow";
             btnShow.Size = new Size(88, 35);
             btnShow.TabIndex = 2;
@@ -102,17 +111,64 @@
             // 
             // rtfOutput
             // 
-            rtfOutput.Location = new Point(188, 196);
+            rtfOutput.Location = new Point(457, 12);
             rtfOutput.Name = "rtfOutput";
-            rtfOutput.Size = new Size(399, 180);
+            rtfOutput.Size = new Size(271, 109);
             rtfOutput.TabIndex = 7;
             rtfOutput.Text = "";
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.BackgroundColor = SystemColors.Window;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { FileName, FileSize, FirstBlock });
+            dataGridView1.Location = new Point(34, 196);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(369, 188);
+            dataGridView1.TabIndex = 8;
+            // 
+            // FileName
+            // 
+            FileName.HeaderText = "Име на файл";
+            FileName.Name = "FileName";
+            // 
+            // FileSize
+            // 
+            FileSize.HeaderText = "Размер на файл";
+            FileSize.Name = "FileSize";
+            // 
+            // FirstBlock
+            // 
+            FirstBlock.HeaderText = "Първи блок";
+            FirstBlock.Name = "FirstBlock";
+            // 
+            // dataGridView2
+            // 
+            dataGridView2.BackgroundColor = SystemColors.Window;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Columns.AddRange(new DataGridViewColumn[] { Block, NextBlock });
+            dataGridView2.Location = new Point(505, 196);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.Size = new Size(245, 197);
+            dataGridView2.TabIndex = 9;
+            // 
+            // Block
+            // 
+            Block.HeaderText = "Блок";
+            Block.Name = "Block";
+            // 
+            // NextBlock
+            // 
+            NextBlock.HeaderText = "Следващ блок";
+            NextBlock.Name = "NextBlock";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(dataGridView2);
+            Controls.Add(dataGridView1);
             Controls.Add(rtfOutput);
             Controls.Add(tbFileSize);
             Controls.Add(tbFileName);
@@ -123,6 +179,8 @@
             Controls.Add(btnCreate);
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -137,5 +195,12 @@
         private TextBox tbFileName;
         private TextBox tbFileSize;
         private RichTextBox rtfOutput;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn FileName;
+        private DataGridViewTextBoxColumn FileSize;
+        private DataGridViewTextBoxColumn FirstBlock;
+        private DataGridView dataGridView2;
+        private DataGridViewTextBoxColumn Block;
+        private DataGridViewTextBoxColumn NextBlock;
     }
 }
