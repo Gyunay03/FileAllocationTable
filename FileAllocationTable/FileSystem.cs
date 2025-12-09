@@ -50,7 +50,7 @@ namespace FileAllocationTable
                 };
             }
         }
-
+        
         //метод за намиране на свободни блокове
         public List <int> FindFreeBlocks(int requiredBlocks)
         {
@@ -68,7 +68,7 @@ namespace FileAllocationTable
             }
             return freeBlocks;
         }
-
+        
         //метод за създаване на файл
         public void SaveFile(string name, int size)
         {
@@ -211,6 +211,58 @@ namespace FileAllocationTable
 
                 MessageBox.Show(message.ToString());
             }
+        }
+
+        public string GetState()
+        {
+            var output = new StringBuilder();
+
+            for(int i=0; i<Dir.Length; i++)
+            {
+                var file = Dir[i];
+
+                if (file == null || file.Name == "")
+                    continue;
+
+                output.AppendLine($"Име на файла: {file.Name}");
+                output.AppendLine($"Размер: {file.Size}");
+                output.AppendLine($"Блокове: ");
+
+                int currentBlock = file.FirstBlock;
+
+                if (currentBlock == -1)
+                {
+                    output.Append("(няма първи блок)");
+                }
+                else 
+                {
+                    var blocks = new List<int>();
+                    int safetyCounter = 0;
+                    while(currentBlock != NillMark)
+                    {
+                        if(currentBlock < 0 || currentBlock >= MaxBlocks)
+                        {
+                            blocks.Add(-1);
+                            break;
+                        }
+
+                        blocks.Add(currentBlock);
+                        int next = FAT[currentBlock].NextBlock;
+
+                        if (next == currentBlock) break;
+
+                        currentBlock = next;
+                        safetyCounter++;
+                        if (safetyCounter > MaxBlocks + 5) break;
+                    }
+
+                    output.Append(string.Join(",", blocks));
+                }
+
+                output.AppendLine();
+                output.AppendLine(new string('-', 30));  
+            }
+            return output.ToString();
         }
     }
 }
