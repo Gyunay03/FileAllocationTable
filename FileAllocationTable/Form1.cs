@@ -5,6 +5,11 @@ namespace FileAllocationTable
         public Form1()
         {
             InitializeComponent();
+            dgvDirectory.DataSource = fs.ActiveFiles;
+            dgvFAT.DataSource = fs.ActiveFiles;
+            dgvFAT.AutoGenerateColumns = false;
+            dgvFAT.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "BlockIndex", HeaderText = "Блок" });
+            dgvFAT.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NextBlockDisplay", HeaderText = "Следващ блок" });
         }
 
         FileSystem fs = new FileSystem();
@@ -29,8 +34,7 @@ namespace FileAllocationTable
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            rtfOutput.Clear();
-            rtfOutput.Text = fs.GetState();
+            
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,11 @@ namespace FileAllocationTable
         
         int FreeBlocks = MaxBlocks;
 
-        class Directory
+        public class Directory
         {
-            public string Name;
-            public int Size;
-            public int FirstBlock;
+            public string Name { get; set; } = "";
+            public int Size { get; set; } = 0;
+            public int FirstBlock { get; set; } = -1;
         }
 
         class FATBlock
@@ -28,11 +29,21 @@ namespace FileAllocationTable
             public int NextBlock { get; set; }
         }
 
+        public class FATEntry
+        {
+            public int BlockIndex { get; set; }
+            public int NextBlock { get; set; }
+            public string NextBlockDisplay => NextBlock == FreeMark ? "FREE" : (NextBlock == NillMark ? "EOF" : NextBlock.ToString());
+        }
+
         Directory[] Dir = new Directory[MaxBlocks];
         FATBlock[] FAT = new FATBlock[MaxBlocks];
 
+        public BindingList<Directory> ActiveFiles { get; set; } 
+        public BindingList<FATEntry> FatList { get; set; }
         public FileSystem()
         {
+            FatList = new BindingList<FATEntry>();
             //инициализация на FAT
             for (int i =0; i < MaxBlocks; i++)
             {
@@ -40,7 +51,9 @@ namespace FileAllocationTable
             }
 
             //инициализация на директорията
-            for(int i=0; i<MaxBlocks; i++)
+            Dir = new Directory[MaxBlocks];
+            ActiveFiles = new BindingList<Directory>();
+            for (int i=0; i<MaxBlocks; i++)
             {
                 Dir[i] = new Directory 
                 { 
@@ -106,10 +119,13 @@ namespace FileAllocationTable
                 FirstBlock = blocks[0]
             };
 
+            ActiveFiles.Add(Dir[dirIndex]);
+
             //свързване на FAT блокове
             for(int i=0; i<blocks.Count-1; i++)
             {
                 FAT[blocks[i]].NextBlock = blocks[i + 1];
+                FatList.ResetItem(blocks[i]);
             }
 
             FAT[blocks.Last()].NextBlock = NillMark;
@@ -138,11 +154,14 @@ namespace FileAllocationTable
 
             while(current != NillMark)
             {
-                int next = FAT[current].NextBlock;
-                FAT[current].NextBlock = FreeMark;
+                int next = FatList[current].NextBlock;
+                FatList[current].NextBlock = FreeMark;
+                FatList.ResetItem(current);
                 current = next;
                 FreeBlocks++;
             }
+
+            ActiveFiles.Remove(Dir[dirIndex]);
 
             Dir[dirIndex].Name = "";
             Dir[dirIndex].Size = 0;

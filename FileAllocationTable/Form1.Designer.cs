@@ -35,16 +35,15 @@
             label2 = new Label();
             tbFileName = new TextBox();
             tbFileSize = new TextBox();
-            rtfOutput = new RichTextBox();
-            dataGridView1 = new DataGridView();
+            dgvDirectory = new DataGridView();
             FileName = new DataGridViewTextBoxColumn();
             FileSize = new DataGridViewTextBoxColumn();
             FirstBlock = new DataGridViewTextBoxColumn();
-            dataGridView2 = new DataGridView();
+            dgvFAT = new DataGridView();
             Block = new DataGridViewTextBoxColumn();
             NextBlock = new DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDirectory).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvFAT).BeginInit();
             SuspendLayout();
             // 
             // btnCreate
@@ -109,23 +108,15 @@
             tbFileSize.Size = new Size(100, 23);
             tbFileSize.TabIndex = 6;
             // 
-            // rtfOutput
+            // dgvDirectory
             // 
-            rtfOutput.Location = new Point(457, 12);
-            rtfOutput.Name = "rtfOutput";
-            rtfOutput.Size = new Size(271, 109);
-            rtfOutput.TabIndex = 7;
-            rtfOutput.Text = "";
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.BackgroundColor = SystemColors.Window;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { FileName, FileSize, FirstBlock });
-            dataGridView1.Location = new Point(34, 196);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(369, 188);
-            dataGridView1.TabIndex = 8;
+            dgvDirectory.BackgroundColor = SystemColors.Window;
+            dgvDirectory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDirectory.Columns.AddRange(new DataGridViewColumn[] { FileName, FileSize, FirstBlock });
+            dgvDirectory.Location = new Point(34, 196);
+            dgvDirectory.Name = "dgvDirectory";
+            dgvDirectory.Size = new Size(369, 188);
+            dgvDirectory.TabIndex = 8;
             // 
             // FileName
             // 
@@ -142,15 +133,15 @@
             FirstBlock.HeaderText = "Първи блок";
             FirstBlock.Name = "FirstBlock";
             // 
-            // dataGridView2
+            // dgvFAT
             // 
-            dataGridView2.BackgroundColor = SystemColors.Window;
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Columns.AddRange(new DataGridViewColumn[] { Block, NextBlock });
-            dataGridView2.Location = new Point(505, 196);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.Size = new Size(245, 197);
-            dataGridView2.TabIndex = 9;
+            dgvFAT.BackgroundColor = SystemColors.Window;
+            dgvFAT.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvFAT.Columns.AddRange(new DataGridViewColumn[] { Block, NextBlock });
+            dgvFAT.Location = new Point(517, 196);
+            dgvFAT.Name = "dgvFAT";
+            dgvFAT.Size = new Size(245, 197);
+            dgvFAT.TabIndex = 9;
             // 
             // Block
             // 
@@ -167,9 +158,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(dataGridView2);
-            Controls.Add(dataGridView1);
-            Controls.Add(rtfOutput);
+            Controls.Add(dgvFAT);
+            Controls.Add(dgvDirectory);
             Controls.Add(tbFileSize);
             Controls.Add(tbFileName);
             Controls.Add(label2);
@@ -179,8 +169,8 @@
             Controls.Add(btnCreate);
             Name = "Form1";
             Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDirectory).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvFAT).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -194,12 +184,11 @@
         private Label label2;
         private TextBox tbFileName;
         private TextBox tbFileSize;
-        private RichTextBox rtfOutput;
-        private DataGridView dataGridView1;
+        private DataGridView dgvDirectory;
         private DataGridViewTextBoxColumn FileName;
         private DataGridViewTextBoxColumn FileSize;
         private DataGridViewTextBoxColumn FirstBlock;
-        private DataGridView dataGridView2;
+        private DataGridView dgvFAT;
         private DataGridViewTextBoxColumn Block;
         private DataGridViewTextBoxColumn NextBlock;
     }
