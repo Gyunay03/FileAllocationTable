@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FileAllocationTable
 {
@@ -33,7 +34,22 @@ namespace FileAllocationTable
         {
             public int BlockIndex { get; set; }
             public int NextBlock { get; set; }
-            public string NextBlockDisplay => NextBlock == FreeMark ? "FREE" : (NextBlock == NillMark ? "EOF" : NextBlock.ToString());
+            public string NextBlockDisplay
+            {
+                get 
+                {
+                    if (NextBlock == FreeMark)
+                    {
+                        return "Free";
+                    }
+
+                    if(NextBlock == NillMark)
+                    {
+                        return "EOF";
+                    }
+                    return NextBlock.ToString();
+                }
+            }
         }
 
         Directory[] Dir = new Directory[MaxBlocks];
@@ -43,7 +59,8 @@ namespace FileAllocationTable
         public BindingList<FATEntry> FatList { get; set; }
         public FileSystem()
         {
-            FatList = new BindingList<FATEntry>();
+
+            FAT = new FATBlock[MaxBlocks];
             //инициализация на FAT
             for (int i =0; i < MaxBlocks; i++)
             {
@@ -52,7 +69,6 @@ namespace FileAllocationTable
 
             //инициализация на директорията
             Dir = new Directory[MaxBlocks];
-            ActiveFiles = new BindingList<Directory>();
             for (int i=0; i<MaxBlocks; i++)
             {
                 Dir[i] = new Directory 
@@ -62,8 +78,16 @@ namespace FileAllocationTable
                     FirstBlock = -1 
                 };
             }
+
+            ActiveFiles = new BindingList<Directory>();
+            FatList = new BindingList<FATEntry>();
+
+            for(int i=0; i < MaxBlocks; i++)
+            {
+                FatList.Add(new FATEntry { BlockIndex = i, NextBlock = FAT[i].NextBlock });
+            }
         }
-        
+
         //метод за намиране на свободни блокове
         public List <int> FindFreeBlocks(int requiredBlocks)
         {
@@ -85,7 +109,31 @@ namespace FileAllocationTable
         //метод за създаване на файл
         public void SaveFile(string name, int size)
         {
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                MessageBox.Show("Името на файла е празно.");
+                return;
+            }
+
+            if(ActiveFiles.Any(f => f.Name == name))
+            {
+                MessageBox.Show("Файл с това име вече съществува.");
+                return;
+            }
+
             int requiredBlocks = (size + BlockSize - 1) / BlockSize;
+
+            if(requiredBlocks == 0)
+            {
+                requiredBlocks = 1;
+            }
+
+            if(requiredBlocks > FreeBlocks)
+            {
+                MessageBox.Show("Няма достатъчно свободни блокове.");
+                return;
+            }
+
             var blocks = FindFreeBlocks(requiredBlocks);
 
             if(blocks.Count < requiredBlocks)
@@ -98,7 +146,7 @@ namespace FileAllocationTable
             int dirIndex = -1;
             for(int i=0; i < Dir.Length; i++)
             {
-                if (Dir[i].Name == "")
+                if (string.IsNullOrEmpty(Dir[i].Name))
                 {
                     dirIndex = i;
                     break;
@@ -125,10 +173,16 @@ namespace FileAllocationTable
             for(int i=0; i<blocks.Count-1; i++)
             {
                 FAT[blocks[i]].NextBlock = blocks[i + 1];
+                FatList[blocks[i]].NextBlock = FAT[blocks[i]].NextBlock;
                 FatList.ResetItem(blocks[i]);
             }
 
             FAT[blocks.Last()].NextBlock = NillMark;
+            FatList[blocks.Last()].NextBlock = NillMark;
+            FatList.ResetItem(blocks.Last());
+
+            FreeBlocks -= blocks.Count;
+            MessageBox.Show($"Файлът {name} е записан ({blocks.Count} блок/блока).");
         }
 
         //метод за изтриване на файл
@@ -152,14 +206,35 @@ namespace FileAllocationTable
 
             int current = Dir[dirIndex].FirstBlock;
 
-            while(current != NillMark)
+            if (current == -1)
             {
-                int next = FatList[current].NextBlock;
+                ActiveFiles.Remove(Dir[dirIndex]);
+                Dir[dirIndex].Name = "";
+                Dir[dirIndex].Size = 0;
+                Dir[dirIndex].FirstBlock = -1;
+                MessageBox.Show("Файлът е изтрит.");
+                return;
+            }
+
+            int freed = 0;
+            var safety = 0;
+
+            while(current != NillMark && safety < MaxBlocks + 5)
+            {
+                if (current < 0 || current >= MaxBlocks) break;
+
+                int next = FAT[current].NextBlock;
+                FAT[current].NextBlock = FreeMark;
+                
                 FatList[current].NextBlock = FreeMark;
                 FatList.ResetItem(current);
+                
+                freed++;
                 current = next;
-                FreeBlocks++;
+                safety++;
             }
+
+            FreeBlocks += freed;
 
             ActiveFiles.Remove(Dir[dirIndex]);
 
@@ -167,80 +242,28 @@ namespace FileAllocationTable
             Dir[dirIndex].Size = 0;
             Dir[dirIndex].FirstBlock = -1;
 
-            MessageBox.Show("Файлът е изтрит.");
+            MessageBox.Show($"Файлът е изтрит. Освободени блокове: {freed}.");
         }
 
         //метод за показване на състоянието на основните структури
-        public void Show()
+        public string Show()
         {
-            for(int i=0; i < Dir.Length; i++)
-            {
-                var file = Dir[i];
-                
-                if (file == null || file.Name == "")
-                {
-                    continue;
-                }
-
-                var message = new StringBuilder();
-                message.AppendLine("Име на файла: " + file.Name);
-                message.AppendLine("Размер: " + file.Size);
-                message.AppendLine("Блокове: ");
-
-                int currentBlock = file.FirstBlock;
-
-                if (currentBlock == -1)
-                {
-                    message.Append("(няма първи блок)");
-                }
-
-                else
-                {
-                    var blocks = new List<int>();
-                    var safetyCounter = 0;
-
-                    while (currentBlock != NillMark)
-                    {
-                        if (currentBlock < 0 || currentBlock >= MaxBlocks)
-                        {
-                            blocks.Add(-1);
-                            MessageBox.Show("Невалиден блок.");
-                            break;
-                        }
-
-                        blocks.Add(currentBlock);
-                        int next = FAT[currentBlock].NextBlock;
-
-                        if (next == currentBlock)
-                        {
-                            break;
-                        }
-
-                        currentBlock = next;
-                        safetyCounter++;
-                        
-                        if(safetyCounter > MaxBlocks + 5)
-                        {
-                            break;
-                        }
-                    }
-
-                    message.Append(string.Join(",", blocks));
-                }
-
-                MessageBox.Show(message.ToString());
-            }
+            return GetState();
         }
 
         public string GetState()
         {
             var output = new StringBuilder();
 
-            for(int i=0; i<Dir.Length; i++)
+            output.AppendLine($"Свободни блокове: {FreeBlocks} / {MaxBlocks}");
+            output.AppendLine();
+            output.AppendLine("Директория:");
+
+            for (int i=0; i<Dir.Length; i++)
             {
                 var file = Dir[i];
 
-                if (file == null || file.Name == "")
+                if (file == null || string.IsNullOrEmpty(file.Name))
                     continue;
 
                 output.AppendLine($"Име на файла: {file.Name}");
@@ -257,7 +280,7 @@ namespace FileAllocationTable
                 {
                     var blocks = new List<int>();
                     int safetyCounter = 0;
-                    while(currentBlock != NillMark)
+                    while(currentBlock != NillMark && safetyCounter < MaxBlocks + 5)
                     {
                         if(currentBlock < 0 || currentBlock >= MaxBlocks)
                         {
@@ -272,7 +295,6 @@ namespace FileAllocationTable
 
                         currentBlock = next;
                         safetyCounter++;
-                        if (safetyCounter > MaxBlocks + 5) break;
                     }
 
                     output.Append(string.Join(",", blocks));
@@ -281,6 +303,14 @@ namespace FileAllocationTable
                 output.AppendLine();
                 output.AppendLine(new string('-', 30));  
             }
+
+            output.AppendLine();
+            output.AppendLine("-- FAT -- ");
+            for (int i = 0; i < FatList.Count; i++)
+            {
+                output.AppendLine($"Блок {FatList[i].BlockIndex} -> {FatList[i].NextBlockDisplay}");
+            }
+
             return output.ToString();
         }
     }
