@@ -12,18 +12,18 @@ namespace FileAllocationTable
 
             // изглед за таблицата на директорията
             dgvDirectory.AutoGenerateColumns = false;
-            dgvDirectory.DataSource = fs.ActiveFiles;
             dgvDirectory.Columns.Clear();
-            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "Name", HeaderText = "Име на файл", ReadOnly = true });
-            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "Size", HeaderText = "Размер на файл", ReadOnly = true });
-            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "FirstBlock", HeaderText = "Първи блок", ReadOnly = true });
-            
+            dgvDirectory.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Name", HeaderText = "Име на файл", ReadOnly = true });
+            dgvDirectory.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Size", HeaderText = "Размер на файл", ReadOnly = true });
+            dgvDirectory.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FirstBlock", HeaderText = "Първи блок", ReadOnly = true });
+            dgvDirectory.DataSource = fs.ActiveFiles;
+
             // изглед за FAT таблицата
             dgvFAT.AutoGenerateColumns = false;
-            dgvFAT.DataSource = fs.FatList;
             dgvFAT.Columns.Clear();
             dgvFAT.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "BlockIndex", HeaderText = "Блок", ReadOnly = true });
             dgvFAT.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NextBlockDisplay", HeaderText = "Следващ блок", ReadOnly = true });
+            dgvFAT.DataSource = fs.FatList;
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
@@ -52,8 +52,8 @@ namespace FileAllocationTable
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            string state = fs.Show();
-            MessageBox.Show(state, "Състояние на файловата система");   
+            StateForm form = new StateForm(fs.Show());
+            form.Show();
         }
     }
 }

@@ -31,26 +31,28 @@
             btnCreate = new Button();
             btnDelete = new Button();
             btnShow = new Button();
-            label1 = new Label();
-            label2 = new Label();
+            FileName = new Label();
+            FileSize = new Label();
             tbFileName = new TextBox();
             tbFileSize = new TextBox();
             dgvDirectory = new DataGridView();
-            FileName = new DataGridViewTextBoxColumn();
-            FileSize = new DataGridViewTextBoxColumn();
-            FirstBlock = new DataGridViewTextBoxColumn();
             dgvFAT = new DataGridView();
-            Block = new DataGridViewTextBoxColumn();
-            NextBlock = new DataGridViewTextBoxColumn();
+            Directory = new Label();
+            FAT = new Label();
+            panel1 = new Panel();
+            panel2 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dgvDirectory).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvFAT).BeginInit();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // btnCreate
             // 
-            btnCreate.Location = new Point(176, 131);
+            btnCreate.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnCreate.Location = new Point(279, 21);
             btnCreate.Name = "btnCreate";
-            btnCreate.Size = new Size(97, 41);
+            btnCreate.Size = new Size(166, 41);
             btnCreate.TabIndex = 0;
             btnCreate.Text = "Създаване на файл";
             btnCreate.UseVisualStyleBackColor = true;
@@ -58,9 +60,10 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(328, 131);
+            btnDelete.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnDelete.Location = new Point(451, 21);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(109, 40);
+            btnDelete.Size = new Size(164, 40);
             btnDelete.TabIndex = 1;
             btnDelete.Text = "Изтриване на файл";
             btnDelete.UseVisualStyleBackColor = true;
@@ -68,42 +71,45 @@
             // 
             // btnShow
             // 
-            btnShow.Location = new Point(505, 131);
+            btnShow.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnShow.Location = new Point(621, 21);
             btnShow.Name = "btnShow";
-            btnShow.Size = new Size(88, 35);
+            btnShow.Size = new Size(96, 40);
             btnShow.TabIndex = 2;
             btnShow.Text = "Показване";
             btnShow.UseVisualStyleBackColor = true;
             btnShow.Click += btnShow_Click;
             // 
-            // label1
+            // FileName
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(47, 38);
-            label1.Name = "label1";
-            label1.Size = new Size(82, 15);
-            label1.TabIndex = 3;
-            label1.Text = "Име на файл:";
+            FileName.AutoSize = true;
+            FileName.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            FileName.Location = new Point(40, 14);
+            FileName.Name = "FileName";
+            FileName.Size = new Size(107, 18);
+            FileName.TabIndex = 3;
+            FileName.Text = "Име на файл:";
             // 
-            // label2
+            // FileSize
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(47, 67);
-            label2.Name = "label2";
-            label2.Size = new Size(111, 15);
-            label2.TabIndex = 4;
-            label2.Text = "Размер (в байтове)";
+            FileSize.AutoSize = true;
+            FileSize.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            FileSize.Location = new Point(6, 45);
+            FileSize.Name = "FileSize";
+            FileSize.Size = new Size(150, 18);
+            FileSize.TabIndex = 4;
+            FileSize.Text = "Размер (в байтове)";
             // 
             // tbFileName
             // 
-            tbFileName.Location = new Point(183, 30);
+            tbFileName.Location = new Point(162, 10);
             tbFileName.Name = "tbFileName";
             tbFileName.Size = new Size(100, 23);
             tbFileName.TabIndex = 5;
             // 
             // tbFileSize
             // 
-            tbFileSize.Location = new Point(183, 64);
+            tbFileSize.Location = new Point(162, 43);
             tbFileSize.Name = "tbFileSize";
             tbFileSize.Size = new Size(100, 23);
             tbFileSize.TabIndex = 6;
@@ -112,67 +118,83 @@
             // 
             dgvDirectory.BackgroundColor = SystemColors.Window;
             dgvDirectory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDirectory.Columns.AddRange(new DataGridViewColumn[] { FileName, FileSize, FirstBlock });
-            dgvDirectory.Location = new Point(34, 196);
+            dgvDirectory.Location = new Point(13, 34);
             dgvDirectory.Name = "dgvDirectory";
-            dgvDirectory.Size = new Size(369, 188);
+            dgvDirectory.Size = new Size(350, 311);
             dgvDirectory.TabIndex = 8;
-            // 
-            // FileName
-            // 
-            FileName.HeaderText = "Име на файл";
-            FileName.Name = "FileName";
-            // 
-            // FileSize
-            // 
-            FileSize.HeaderText = "Размер на файл";
-            FileSize.Name = "FileSize";
-            // 
-            // FirstBlock
-            // 
-            FirstBlock.HeaderText = "Първи блок";
-            FirstBlock.Name = "FirstBlock";
             // 
             // dgvFAT
             // 
             dgvFAT.BackgroundColor = SystemColors.Window;
             dgvFAT.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvFAT.Columns.AddRange(new DataGridViewColumn[] { Block, NextBlock });
-            dgvFAT.Location = new Point(517, 196);
+            dgvFAT.Location = new Point(410, 34);
             dgvFAT.Name = "dgvFAT";
-            dgvFAT.Size = new Size(245, 197);
+            dgvFAT.Size = new Size(263, 311);
             dgvFAT.TabIndex = 9;
             // 
-            // Block
+            // Directory
             // 
-            Block.HeaderText = "Блок";
-            Block.Name = "Block";
+            Directory.AutoSize = true;
+            Directory.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            Directory.Location = new Point(136, 7);
+            Directory.Name = "Directory";
+            Directory.Size = new Size(104, 19);
+            Directory.TabIndex = 10;
+            Directory.Text = "Директория";
             // 
-            // NextBlock
+            // FAT
             // 
-            NextBlock.HeaderText = "Следващ блок";
-            NextBlock.Name = "NextBlock";
+            FAT.AutoSize = true;
+            FAT.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            FAT.Location = new Point(462, 7);
+            FAT.Name = "FAT";
+            FAT.Size = new Size(160, 19);
+            FAT.TabIndex = 11;
+            FAT.Text = "File Allocation Table";
+            // 
+            // panel1
+            // 
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(tbFileSize);
+            panel1.Controls.Add(tbFileName);
+            panel1.Controls.Add(FileSize);
+            panel1.Controls.Add(FileName);
+            panel1.Controls.Add(btnShow);
+            panel1.Controls.Add(btnDelete);
+            panel1.Controls.Add(btnCreate);
+            panel1.Location = new Point(6, 10);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(735, 84);
+            panel1.TabIndex = 12;
+            // 
+            // panel2
+            // 
+            panel2.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(FAT);
+            panel2.Controls.Add(Directory);
+            panel2.Controls.Add(dgvFAT);
+            panel2.Controls.Add(dgvDirectory);
+            panel2.Location = new Point(6, 108);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(735, 356);
+            panel2.TabIndex = 13;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(dgvFAT);
-            Controls.Add(dgvDirectory);
-            Controls.Add(tbFileSize);
-            Controls.Add(tbFileName);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(btnShow);
-            Controls.Add(btnDelete);
-            Controls.Add(btnCreate);
+            ClientSize = new Size(749, 474);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "File Allocation Table";
             ((System.ComponentModel.ISupportInitialize)dgvDirectory).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvFAT).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -180,16 +202,15 @@
         private Button btnCreate;
         private Button btnDelete;
         private Button btnShow;
-        private Label label1;
-        private Label label2;
+        private Label FileName;
+        private Label FileSize;
         private TextBox tbFileName;
         private TextBox tbFileSize;
         private DataGridView dgvDirectory;
-        private DataGridViewTextBoxColumn FileName;
-        private DataGridViewTextBoxColumn FileSize;
-        private DataGridViewTextBoxColumn FirstBlock;
         private DataGridView dgvFAT;
-        private DataGridViewTextBoxColumn Block;
-        private DataGridViewTextBoxColumn NextBlock;
+        private Label Directory;
+        private Label FAT;
+        private Panel panel1;
+        private Panel panel2;
     }
 }
