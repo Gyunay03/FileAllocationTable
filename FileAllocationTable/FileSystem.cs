@@ -40,12 +40,12 @@ namespace FileAllocationTable
                 {
                     if (NextBlock == FreeMark)
                     {
-                        return "Free";
+                        return "Свободен";
                     }
 
                     if(NextBlock == NillMark)
                     {
-                        return "EOF";
+                        return "Последен";
                     }
                     return NextBlock.ToString();
                 }
@@ -182,7 +182,7 @@ namespace FileAllocationTable
             FatList.ResetItem(blocks.Last());
 
             FreeBlocks -= blocks.Count;
-            MessageBox.Show($"Файлът {name} е записан ({blocks.Count} блок/блока).");
+            MessageBox.Show($"Файлът {name} е записан в {blocks.Count} блок/блока.");
         }
 
         //метод за изтриване на файл
@@ -305,7 +305,7 @@ namespace FileAllocationTable
             }
 
             output.AppendLine();
-            output.AppendLine("-- FAT -- ");
+            output.AppendLine("File Allocation Table");
             for (int i = 0; i < FatList.Count; i++)
             {
                 output.AppendLine($"Блок {FatList[i].BlockIndex} -> {FatList[i].NextBlockDisplay}");
