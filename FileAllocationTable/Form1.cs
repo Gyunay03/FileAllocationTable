@@ -10,9 +10,15 @@ namespace FileAllocationTable
         {
             InitializeComponent();
 
-            dgvDirectory.AutoGenerateColumns = true;
+            // изглед за таблицата на директорията
+            dgvDirectory.AutoGenerateColumns = false;
             dgvDirectory.DataSource = fs.ActiveFiles;
+            dgvDirectory.Columns.Clear();
+            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "Name", HeaderText = "Име на файл", ReadOnly = true });
+            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "Size", HeaderText = "Размер на файл", ReadOnly = true });
+            dgvDirectory.Columns.Add(new DataGridViewColumn { DataPropertyName = "FirstBlock", HeaderText = "Първи блок", ReadOnly = true });
             
+            // изглед за FAT таблицата
             dgvFAT.AutoGenerateColumns = false;
             dgvFAT.DataSource = fs.FatList;
             dgvFAT.Columns.Clear();
